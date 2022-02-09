@@ -19,7 +19,7 @@ local function update_presence()
 	local filename = 'unsaved file'
 	local doc = av.doc
 	if doc.filename then	
-		filename = doc.filename
+		filename = common.basename(doc.filename)
 	end
 	
 	local ext = filename:match('^.+(%..+)$')
