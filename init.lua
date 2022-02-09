@@ -6,7 +6,6 @@ local DocView = require 'core.docview'
 local av = nil
 local lpPath = USERDIR .. '/plugins/litepresence/litepresence'
 local proc = process.start {lpPath}
-local old_set_active_view = core.set_active_view
 
 local function send(data)
 	for k, v in pairs(data) do
@@ -42,11 +41,23 @@ local function update_presence()
 	})
 end
 
+local setActiveView = core.set_active_view
 function core.set_active_view(view)
 	if getmetatable(view) == DocView and view ~= av then
 		av = view
 		update_presence()
 	end
-	old_set_active_view(view)
+	setActiveView(view)
 end
 
+local coreQuit = core.quit
+function core.quit(force)
+	proc:terminate()
+	coreQuit(force)
+end
+
+local coreRestart = core.restart
+function core.restart(force)
+	proc:terminate()
+	coreRestart(force)
+end
