@@ -1,13 +1,19 @@
 -- mod-version:2 -- lite-xl 2.0
 local core = require 'core'
 local common = require 'core.common'
+local command = require 'core.command'
 local DocView = require 'core.docview'
 
 local av = nil
-local lpPath = USERDIR .. '/plugins/litepresence/litepresence'
-local proc = process.start {lpPath}
+local proc = nil
+local started = false
 
 local function send(data)
+	if not started then
+		core.log 'presene isnt started'
+		return
+	end
+
 	for k, v in pairs(data) do
 		proc:write(k .. ' ' .. v .. '\n')
 	end
@@ -39,6 +45,33 @@ local function update_presence()
 	})
 end
 
+local function start()
+	if started then
+		core.log 'Rich presence has already started'
+		return
+	end
+	local lpPath = USERDIR .. '/plugins/litepresence/litepresence'
+	started = true
+	proc = process.start {lpPath}
+end
+
+start()
+
+local function stop()
+	if not started then
+		core.log 'Rich presence is not running'
+		return
+	end
+	started = false
+	proc:terminate()
+end
+
+local function restart()
+	stop()
+	start()
+	update_presence()
+end
+
 local setActiveView = core.set_active_view
 function core.set_active_view(view)
 	if getmetatable(view) == DocView and view ~= av then
@@ -50,12 +83,18 @@ end
 
 local coreQuit = core.quit
 function core.quit(force)
-	proc:terminate()
+	stop()
 	coreQuit(force)
 end
 
 local coreRestart = core.restart
 function core.restart(force)
-	proc:terminate()
+	stop()
 	coreRestart(force)
 end
+
+command.add('core.docview', {
+	['litepresence:stop-rich-presence'] = stop,
+	['litepresence:start-rich-presence'] = start,
+	['litepresence:restart-rich-presence'] = restart
+})
