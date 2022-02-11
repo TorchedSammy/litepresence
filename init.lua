@@ -22,12 +22,10 @@ local function update_presence()
 	end
 	
 	local ext = filename:match('^.+(%..+)$')
-	local ftype = ''
+	local ftype = 'unknown'
 	if ext then
 		ftype = ext:sub(2)
 		if ext == '.md' then ftype = 'markdown' end
-	else
-		ftype = 'unknown'
 	end
 
 	local projDir = common.basename(core.project_dir)
