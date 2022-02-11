@@ -7,6 +7,52 @@ local DocView = require 'core.docview'
 local av = nil
 local proc = nil
 local started = false
+-- extensions mapped to language names
+local extTbl = {
+    ['asm'] = 'assembly',
+    ['c,h'] = 'c',
+    ['cpp,hpp'] = 'cpp',
+    ['cr'] = 'crystal',
+    ['cs'] = 'cs',
+    ['css'] = 'css',
+    ['dart'] = 'dart',
+    ['ejs,tmpl'] = 'ejs',
+    ['ex,exs'] = 'elixir',
+    ['gitignore,gitattributes,gitmodules'] = 'git',
+    ['go'] = 'go',
+    ['hs'] = 'haskell',
+    ['htm,html,mhtml'] = 'html',
+    ['png,jpg,jpeg,jfif,gif,webp'] = 'image',
+    ['java,class,properties'] = 'java',
+    ['js'] = 'javascript',
+    ['json'] = 'json',
+    ['kt'] = 'kotlin',
+    ['lua'] = 'lua',
+    ['md,markdown'] = 'markdown',
+    ['t'] = 'perl',
+    ['php'] = 'php',
+    ['py,pyx'] = 'python',
+    ['jsx,tsx'] = 'react',
+    ['rb'] = 'ruby',
+    ['rs'] = 'rust',
+    ['sh,bat'] = 'shell',
+    ['swift'] = 'swift',
+    ['txt,rst,rest'] = 'text',
+    ['toml'] = 'toml',
+    ['ts'] = 'typescript',
+    ['vue'] = 'vue',
+    ['xml,svg,yml,yaml,cfg,ini']= 'xml',
+}
+
+local function extToFtype(origext)
+	for exts, ftype in pairs(extTbl) do
+		for ext in exts:gmatch('([^,]+)') do
+			if ext == origext then return ftype end
+		end
+	end
+	
+	return 'unknown'
+end
 
 local function send(data)
 	if not started then
@@ -29,10 +75,7 @@ local function update_presence()
 	
 	local ext = filename:match('^.+(%..+)$')
 	local ftype = 'unknown'
-	if ext then
-		ftype = ext:sub(2)
-		if ext == '.md' then ftype = 'markdown' end
-	end
+	if ext then ftype = extToFtype(ext:sub(2)) end
 
 	local projDir = common.basename(core.project_dir)
 	local state = 'Project: ' .. projDir
