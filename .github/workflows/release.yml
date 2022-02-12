@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v[0-9]+.*
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: taiki-e/create-gh-release-action@v1
+        with:
+          title: Litepresence $tag
+          changelog: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  upload-assets:
+    strategy:
+      matrix:
+        goarch: ["386", amd64, arm64]
+        goos: [linux, macos, windows]
+        exclude:  
+          - goarch: "386"
+            goos: darwin 
+          - goarch: arm64
+            goos: windows 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: wangyoucao577/go-release-action@v1.23
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          binary_name: clematis
+          extra_files: LICENSE README.md
