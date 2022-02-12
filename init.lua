@@ -55,10 +55,7 @@ local function extToFtype(origext)
 end
 
 local function send(data)
-	if not started then
-		core.log 'presene isnt started'
-		return
-	end
+	if not started then return end
 
 	for k, v in pairs(data) do
 		proc:write(k .. ' ' .. v .. '\n')
