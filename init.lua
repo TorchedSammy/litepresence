@@ -2,6 +2,7 @@
 local core = require 'core'
 local common = require 'core.common'
 local command = require 'core.command'
+local Doc = require 'core.doc'
 local DocView = require 'core.docview'
 
 local av = nil
@@ -112,6 +113,14 @@ local function restart()
 	update_presence()
 end
 
+local docSave = Doc.save
+function Doc:save(...)
+	if self.new_file then
+		docSave(self, ...)
+		update_presence()
+	end
+	docSave(self, ...)
+end
 local setActiveView = core.set_active_view
 function core.set_active_view(view)
 	if getmetatable(view) == DocView and view ~= av then
