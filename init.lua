@@ -1,9 +1,22 @@
 -- mod-version:2 -- lite-xl 2.0
 local core = require 'core'
-local common = require 'core.common'
 local command = require 'core.command'
+local common = require 'core.common'
+local config = require 'core.config'
 local Doc = require 'core.doc'
 local DocView = require 'core.docview'
+
+local function merge(orig, tbl)
+	for k, v in pairs(tbl) do
+		orig[k] = v
+	end
+
+	return orig
+end
+
+local conf = merge({
+	binpath = USERDIR .. '/plugins/litepresence/litepresence'
+}, config.plugins.litepresence)
 
 local av = nil
 local proc = nil
@@ -91,9 +104,8 @@ local function start()
 		core.log 'Rich presence has already started'
 		return
 	end
-	local lpPath = USERDIR .. '/plugins/litepresence/litepresence'
 	started = true
-	proc = process.start {lpPath}
+	proc = process.start {conf.binpath}
 end
 
 start()
@@ -121,6 +133,7 @@ function Doc:save(...)
 	end
 	docSave(self, ...)
 end
+
 local setActiveView = core.set_active_view
 function core.set_active_view(view)
 	if getmetatable(view) == DocView and view ~= av then
