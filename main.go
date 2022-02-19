@@ -48,12 +48,15 @@ func main() {
 				case "bigText":
 				activity.LargeText = data
 				case "send":
-				client.SetActivity(*activity)
+				err := client.SetActivity(*activity)
+				if err != nil {
+					panic(err)
+				}
 			}
 		}
 
-		if scanner.Err() != nil {
-			// do thing
+		if sErr := scanner.Err(); sErr != nil {
+			panic(sErr)
 		}		
 	}()
 	<-done
