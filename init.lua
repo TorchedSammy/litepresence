@@ -7,7 +7,7 @@ local Doc = require 'core.doc'
 local DocView = require 'core.docview'
 
 local function merge(orig, tbl)
-	if tbl == nil return orig end
+	if tbl == nil then return orig end
 	for k, v in pairs(tbl) do
 		orig[k] = v
 	end
