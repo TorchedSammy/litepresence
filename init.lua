@@ -112,10 +112,7 @@ core.add_thread(function()
 	while true do
 		if not proc:running() and started then
 			local err = proc:read_stdout() or proc:read_stderr()
-			if err == 'No such file or directory' then
-				core.error 'Litepresence: Could not run binary, is the path correct?'
-			end
-			core.error('Litepresence: ' .. err)
+			core.error(err)
 			started = false
 		end
 		coroutine.yield(0.5)
