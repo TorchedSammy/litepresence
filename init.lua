@@ -21,7 +21,7 @@ local function localPath()
 end
 
 local conf = merge({
-	binpath = localPath() .. '/litepresence' .. (PLATFORM == 'Windows' and '.exe' or '')
+	binpath = localPath() .. 'litepresence' .. (PLATFORM == 'Windows' and '.exe' or '')
 }, config.plugins.litepresence)
 
 local av = nil
