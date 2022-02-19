@@ -55,7 +55,7 @@ local extTbl = {
     ['toml'] = 'toml',
     ['ts'] = 'typescript',
     ['vue'] = 'vue',
-    ['xml,svg,yml,yaml,cfg,ini']= 'xml',
+    ['xml,svg,yml,yaml,cfg,ini'] = 'xml',
 }
 
 local function extToFtype(origext)
@@ -69,8 +69,6 @@ local function extToFtype(origext)
 end
 
 local function send(data)
-	if not started then return end
-
 	for k, v in pairs(data) do
 		proc:write(k .. ' ' .. v .. '\n')
 	end
@@ -78,6 +76,7 @@ local function send(data)
 end
 
 local function update_presence()
+	if not started then return end
 	local filename = 'unsaved file'
 	local doc = av.doc
 	if doc.filename then	
@@ -107,6 +106,20 @@ local function start()
 	started = true
 	proc = process.start {conf.binpath}
 end
+
+core.add_thread(function()
+	while true do
+		if not proc:running() and started then
+			local err = proc:read_stdout() or proc:read_stderr()
+			if err == 'No such file or directory' then
+				core.error 'Litepresence: Could not run binary, is the path correct?'
+			end
+			core.error('Litepresence: ' .. err)
+			started = false
+		end
+		coroutine.yield(0.5)
+	end
+end)
 
 start()
 
