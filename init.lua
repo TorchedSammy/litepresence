@@ -16,7 +16,7 @@ local function merge(orig, tbl)
 end
 
 local conf = merge({
-	binpath = USERDIR .. '/plugins/litepresence/litepresence'
+	binpath = USERDIR .. '/plugins/litepresence/litepresence' .. (PLATFORM == 'Windows' and '.exe' or '')
 }, config.plugins.litepresence)
 
 local av = nil
