@@ -47,6 +47,10 @@ func main() {
 				activity.LargeImage = data
 				case "bigText":
 				activity.LargeText = data
+				case "smallImg":
+				activity.SmallImage = data
+				case "smallText":
+				activity.SmallText = data
 				case "timestamp":
 				n := time.Now()
 				activity.Timestamps = &client.Timestamps{
