@@ -21,7 +21,8 @@ local function localPath()
 end
 
 local conf = merge({
-	binpath = localPath() .. 'litepresence'
+	binpath = localPath() .. 'litepresence',
+	projectTime = false
 }, config.plugins.litepresence)
 
 local av = nil
@@ -96,12 +97,14 @@ local function update_presence()
 	local projDir = common.basename(core.project_dir)
 	local state = 'Project: ' .. projDir
 	local details = 'Editing ' .. filename
-	send({
+	local data = {
 		state = state,
 		details = details,
 		bigImg = ftype,
 		bigText = ''
-	})
+	}
+	if not conf.projectTime then data.timestamp = 'y' end
+	send(data)
 end
 
 local function start()

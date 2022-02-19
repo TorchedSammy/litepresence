@@ -47,6 +47,11 @@ func main() {
 				activity.LargeImage = data
 				case "bigText":
 				activity.LargeText = data
+				case "timestamp":
+				n := time.Now()
+				activity.Timestamps = &client.Timestamps{
+					Start: &n,
+				}
 				case "send":
 				err := client.SetActivity(*activity)
 				if err != nil {
