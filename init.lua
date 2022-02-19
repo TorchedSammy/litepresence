@@ -15,8 +15,13 @@ local function merge(orig, tbl)
 	return orig
 end
 
+local function localPath()
+   local str = debug.getinfo(2, 'S').source:sub(2)
+   return str:match('(.*[/\\])')
+end
+
 local conf = merge({
-	binpath = USERDIR .. '/plugins/litepresence/litepresence' .. (PLATFORM == 'Windows' and '.exe' or '')
+	binpath = localPath() .. '/litepresence' .. (PLATFORM == 'Windows' and '.exe' or '')
 }, config.plugins.litepresence)
 
 local av = nil
