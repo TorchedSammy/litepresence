@@ -71,7 +71,7 @@ local function extToFtype(origext)
 			if ext == origext then return ftype end
 		end
 	end
-	
+
 	return 'unknown'
 end
 
@@ -86,10 +86,10 @@ local function update_presence()
 	if not started then return end
 	local filename = 'unsaved file'
 	local doc = av.doc
-	if doc.filename then	
+	if doc.filename then
 		filename = common.basename(doc.filename)
 	end
-	
+
 	local ext = filename:match('^.+(%..+)$')
 	local ftype = 'unknown'
 	if ext then ftype = extToFtype(ext:sub(2)) end
@@ -119,8 +119,8 @@ end
 core.add_thread(function()
 	while true do
 		if not proc:running() and started then
-			local err = proc:read_stdout() or proc:read_stderr()
-			core.error(err)
+			local err = proc:read_stdout() or proc:read_stderr() or '!? Binary quit unexpectedly'
+			core.error('Litepresence: ' .. err)
 			started = false
 		end
 		coroutine.yield(0.5)
