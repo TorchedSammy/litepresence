@@ -6,6 +6,8 @@ local config = require 'core.config'
 local Doc = require 'core.doc'
 local DocView = require 'core.docview'
 
+local process = require 'process'
+
 local function merge(orig, tbl)
 	if tbl == nil then return orig end
 	for k, v in pairs(tbl) do
