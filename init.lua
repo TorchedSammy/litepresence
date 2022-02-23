@@ -6,6 +6,8 @@ local config = require 'core.config'
 local Doc = require 'core.doc'
 local DocView = require 'core.docview'
 
+local process = require 'process'
+
 local function merge(orig, tbl)
 	if tbl == nil then return orig end
 	for k, v in pairs(tbl) do
@@ -20,6 +22,16 @@ local function localPath()
    return str:match('(.*[/\\])')
 end
 
+local function makeTbl(tbl)
+	local t = {}
+	for exts, ftype in pairs(tbl) do
+		for ext in exts:gmatch('[^,]+') do
+			t[ext] = ftype
+		end
+	end
+	return t
+end
+
 local conf = merge({
 	binPath = localPath() .. 'litepresence',
 	projectTime = false,
@@ -30,7 +42,7 @@ local av = nil
 local proc = nil
 local started = false
 -- extensions mapped to language names
-local extTbl = {
+local extTbl = makeTbl {
     ['asm'] = 'assembly',
     ['c,h'] = 'c',
     ['cpp,hpp'] = 'cpp',
@@ -66,16 +78,6 @@ local extTbl = {
     ['xml,svg,yml,yaml,cfg,ini'] = 'xml',
 }
 
-local function extToFtype(origext)
-	for exts, ftype in pairs(extTbl) do
-		for ext in exts:gmatch('([^,]+)') do
-			if ext == origext then return ftype end
-		end
-	end
-
-	return 'unknown'
-end
-
 local function send(data)
 	for k, v in pairs(data) do
 		proc:write(k .. ' ' .. v .. '\n')
@@ -93,7 +95,7 @@ local function update_presence()
 
 	local ext = filename:match('^.+(%..+)$')
 	local ftype = 'unknown'
-	if ext then ftype = extToFtype(ext:sub(2)) end
+	if ext then ftype = extTbl[ext:sub(2)] or 'unknown' end
 
 	local projDir = common.basename(core.project_dir)
 	local state = 'Project: ' .. projDir
