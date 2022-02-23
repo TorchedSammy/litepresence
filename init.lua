@@ -24,9 +24,9 @@ end
 
 local function makeTbl(tbl)
 	local t = {}
-	for exts, t in pairs(tbl) do
+	for exts, ftype in pairs(tbl) do
 		for ext in exts:gmatch('[^,]+') do
-			t[ext] = t
+			t[ext] = ftype
 		end
 	end
 	return t
