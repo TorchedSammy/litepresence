@@ -22,7 +22,6 @@ local function localPath()
    return str:match('(.*[/\\])')
 end
 
-local conf = merge({
 local function makeTbl(tbl)
 	local t = {}
 	for exts, t in pairs(tbl) do
@@ -33,10 +32,11 @@ local function makeTbl(tbl)
 	return t
 end
 
+local conf = merge(config.plugins.litepresence, {
 	binPath = localPath() .. 'litepresence',
 	projectTime = false,
 	clientId = "749282810971291659"
-}, config.plugins.litepresence)
+})
 
 local av = nil
 local proc = nil
