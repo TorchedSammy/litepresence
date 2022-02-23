@@ -32,11 +32,11 @@ local function makeTbl(tbl)
 	return t
 end
 
-local conf = merge(config.plugins.litepresence, {
+local conf = merge({
 	binPath = localPath() .. 'litepresence',
 	projectTime = false,
 	clientId = "749282810971291659"
-})
+}, config.plugins.litepresence)
 
 local av = nil
 local proc = nil
