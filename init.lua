@@ -21,8 +21,9 @@ local function localPath()
 end
 
 local conf = merge({
-	binpath = localPath() .. 'litepresence',
-	projectTime = false
+	binPath = localPath() .. 'litepresence',
+	projectTime = false,
+	clientId = "749282810971291659"
 }, config.plugins.litepresence)
 
 local av = nil
@@ -113,7 +114,7 @@ local function start()
 		return
 	end
 	started = true
-	proc = process.start {conf.binpath}
+	proc = process.start {conf.binPath, "-id", conf.clientId}
 end
 
 core.add_thread(function()
