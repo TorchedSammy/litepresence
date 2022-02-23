@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"flag"
 
 	"github.com/hugolgst/rich-go/client"	
 )
@@ -22,7 +23,10 @@ var activity = &client.Activity{
 }
 
 func main() {
-	err := client.Login("749282810971291659")
+	clientId := flag.String("id", "", "client id")
+	flag.Parse()
+
+	err := client.Login(*clientId)
 	if err != nil {
 		panic(err)
 	}
