@@ -23,6 +23,16 @@ local function localPath()
 end
 
 local conf = merge({
+local function makeTbl(tbl)
+	local t = {}
+	for exts, t in pairs(tbl) do
+		for ext in exts:gmatch('[^,]+') do
+			t[ext] = t
+		end
+	end
+	return t
+end
+
 	binPath = localPath() .. 'litepresence',
 	projectTime = false,
 	clientId = "749282810971291659"
@@ -32,7 +42,7 @@ local av = nil
 local proc = nil
 local started = false
 -- extensions mapped to language names
-local extTbl = {
+local extTbl = makeTbl {
     ['asm'] = 'assembly',
     ['c,h'] = 'c',
     ['cpp,hpp'] = 'cpp',
@@ -68,16 +78,6 @@ local extTbl = {
     ['xml,svg,yml,yaml,cfg,ini'] = 'xml',
 }
 
-local function extToFtype(origext)
-	for exts, ftype in pairs(extTbl) do
-		for ext in exts:gmatch('([^,]+)') do
-			if ext == origext then return ftype end
-		end
-	end
-
-	return 'unknown'
-end
-
 local function send(data)
 	for k, v in pairs(data) do
 		proc:write(k .. ' ' .. v .. '\n')
@@ -95,7 +95,7 @@ local function update_presence()
 
 	local ext = filename:match('^.+(%..+)$')
 	local ftype = 'unknown'
-	if ext then ftype = extToFtype(ext:sub(2)) end
+	if ext then ftype = extTbl[ext:sub(2)] or 'unknown' end
 
 	local projDir = common.basename(core.project_dir)
 	local state = 'Project: ' .. projDir
