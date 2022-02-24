@@ -3,10 +3,9 @@ local core = require 'core'
 local command = require 'core.command'
 local common = require 'core.common'
 local config = require 'core.config'
+local process = require 'process'
 local Doc = require 'core.doc'
 local DocView = require 'core.docview'
-
-local process = require 'process'
 
 local function merge(orig, tbl)
 	if tbl == nil then return orig end
