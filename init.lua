@@ -6,6 +6,7 @@ local config = require 'core.config'
 local process = require 'process'
 local Doc = require 'core.doc'
 local DocView = require 'core.docview'
+local EmptyView = require 'core.emptyview'
 
 local function merge(orig, tbl)
 	if tbl == nil then return orig end
@@ -86,27 +87,40 @@ end
 
 local function update_presence()
 	if not started then return end
-	local filename = 'unsaved file'
-	local doc = av.doc
-	if doc.filename then
-		filename = common.basename(doc.filename)
+	local data
+	local avMt = getmetatable(av)
+	if avMt == DocView then
+		local filename = 'unsaved file'
+		local doc = av.doc
+		if doc.filename then
+			filename = common.basename(doc.filename)
+		end
+
+		local ext = filename:match('^.+(%..+)$')
+		local ftype = 'unknown'
+		if ext then ftype = extTbl[ext:sub(2)] or 'unknown' end
+
+		local projDir = common.basename(core.project_dir)
+		local state = 'Project: ' .. projDir
+		local details = 'Editing ' .. filename
+		data = {
+			state = state,
+			details = details,
+			bigImg = ftype,
+			bigText = ''
+		}
+	elseif avMt == EmptyView then
+		data = {
+			state = 'Idling',
+			details = '',
+			bigImg = 'afk',
+			bigText = 'Idling'
+		}
 	end
-
-	local ext = filename:match('^.+(%..+)$')
-	local ftype = 'unknown'
-	if ext then ftype = extTbl[ext:sub(2)] or 'unknown' end
-
-	local projDir = common.basename(core.project_dir)
-	local state = 'Project: ' .. projDir
-	local details = 'Editing ' .. filename
-	local data = {
-		state = state,
-		details = details,
-		bigImg = ftype,
-		bigText = ''
-	}
-	if not conf.projectTime then data.timestamp = 'y' end
-	send(data)
+	if data then
+		if not conf.projectTime then data.timestamp = 'y' end
+		send(data)
+	end
 end
 
 local function start()
@@ -157,7 +171,7 @@ end
 
 local setActiveView = core.set_active_view
 function core.set_active_view(view)
-	if getmetatable(view) == DocView and view ~= av then
+	if view ~= av then
 		av = view
 		update_presence()
 	end
