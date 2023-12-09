@@ -1,5 +1,11 @@
 # Changelog
 This project adheres to [Semantic Versioning](https://semver.org).
+## [0.3.0] - 2023-12-09
+### Added
+- Send idle status if in emptyview
+### Fixed
+- Mod version for newest lite xl version
+- Perl file extensions
 
 ## [0.2.0] - 2022-03-06
 ### Added
@@ -20,5 +26,6 @@ dies unexpectedly
 ## [0.1.0] - 2022-02-11
 Initial release
 
+[0.2.0]: https://github.com/TorchedSammy/Litepresence/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/TorchedSammy/Litepresence/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/TorchedSammy/Litepresence/releases/tag/v0.1.0
