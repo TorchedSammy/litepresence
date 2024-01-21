@@ -7,6 +7,7 @@ local process = require 'process'
 local Doc = require 'core.doc'
 local DocView = require 'core.docview'
 local EmptyView = require 'core.emptyview'
+local pragtical = EmptyView().title == 'Pragtical'
 
 local function merge(orig, tbl)
 	if tbl == nil then return orig end
@@ -100,21 +101,25 @@ local function update_presence()
 		local ftype = 'unknown'
 		if ext then ftype = extTbl[ext:sub(2)] or 'unknown' end
 
-		local projDir = common.basename(core.project_dir)
+		local projDir = common.basename(core.project_dir or core.root_project().path)
 		local state = 'Project: ' .. projDir
 		local details = 'Editing ' .. filename
 		data = {
 			state = state,
 			details = details,
 			bigImg = ftype,
-			bigText = ''
+			bigText = '',
+			smallImg = not pragtical and 'litexl' or 'pragtical',
+			smallText = not pragtical and 'Lite XL' or 'Pragtical'
 		}
 	elseif avMt == EmptyView then
 		data = {
 			state = 'Idling',
 			details = '',
 			bigImg = 'afk',
-			bigText = 'Idling'
+			bigText = 'Idling',
+			smallImg = not pragtical and 'litexl' or 'pragtical',
+			smallText = not pragtical and 'Lite XL' or 'Pragtical'
 		}
 	end
 	if data then
