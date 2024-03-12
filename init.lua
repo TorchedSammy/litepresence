@@ -54,6 +54,7 @@ local extTbl = makeTbl {
     ['ejs,tmpl'] = 'ejs',
     ['ex,exs'] = 'elixir',
     ['gitignore,gitattributes,gitmodules'] = 'git',
+	['gleam'] = 'gleam',
     ['go'] = 'go',
     ['hs'] = 'haskell',
     ['htm,html,mhtml'] = 'html',
